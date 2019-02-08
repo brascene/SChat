@@ -7,8 +7,12 @@
 //
 
 import UIKit
+import Firebase
+import FirebaseDatabase
 
 class LoginViewController: UIViewController {
+    
+    var viewModel: LoginViewModel = LoginViewModel()
     
     let inputsContainer: UIView = {
         let view = UIView()
@@ -25,8 +29,17 @@ class LoginViewController: UIViewController {
         button.setTitle("Register", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(handleRegister), for: .touchUpInside)
         return button
     }()
+    
+    @objc func handleRegister() {
+        guard let password = passTextField.text, let email = emailTextField.text, let name = nameTextField.text else {
+            return
+        }
+        viewModel.setFormValues(email: email, password: password, name: name)
+        viewModel.handleRegister()
+    }
     
     let nameTextField: UITextField = {
         let tf = UITextField()
@@ -75,6 +88,7 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        viewModel.delegate = self
         view.backgroundColor = UIColor(r: 61, g: 91, b: 151)
         
         view.addSubview(inputsContainer)
@@ -147,8 +161,27 @@ class LoginViewController: UIViewController {
 
 }
 
-extension UIColor {
-    convenience init(r: CGFloat, g: CGFloat, b: CGFloat) {
-        self.init(red: r/255, green: g/255, blue: b/255, alpha: 1)
+extension LoginViewController: LoginViewModelOutput {
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alert.addAction(alertAction)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func userCreated(status: Bool) {
+        if status {
+            showAlert(title: "Success", message: "User created")
+        } else {
+            showAlert(title: "Failed", message: "User not created")
+        }
+    }
+    
+    func updatedChildValues(status: Bool) {
+        if status {
+            showAlert(title: "Success", message: "User data saved")
+        } else {
+            showAlert(title: "Failed", message: "User data not saved")
+        }
     }
 }
