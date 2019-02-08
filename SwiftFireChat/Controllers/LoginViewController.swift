@@ -33,14 +33,6 @@ class LoginViewController: UIViewController {
         return button
     }()
     
-    @objc func handleRegister() {
-        guard let password = passTextField.text, let email = emailTextField.text, let name = nameTextField.text else {
-            return
-        }
-        viewModel.setFormValues(email: email, password: password, name: name)
-        viewModel.handleRegister()
-    }
-    
     let nameTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Name"
@@ -84,6 +76,20 @@ class LoginViewController: UIViewController {
         iv.contentMode = .scaleAspectFill
         return iv
     }()
+    
+    let segControl: UISegmentedControl = {
+        let sc = UISegmentedControl(items: ["Login", "Register"])
+        sc.translatesAutoresizingMaskIntoConstraints = false
+        sc.tintColor = .white
+        sc.selectedSegmentIndex = 1
+        sc.addTarget(self, action: #selector(handleSegControl), for: .valueChanged)
+        return sc
+    }()
+    
+    var inputContainerHeightConstraint: NSLayoutConstraint?
+    var nameTextFieldHeightConstraint: NSLayoutConstraint?
+    var emailHeightConstraint: NSLayoutConstraint?
+    var passHeightConstraint: NSLayoutConstraint?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,21 +100,65 @@ class LoginViewController: UIViewController {
         view.addSubview(inputsContainer)
         view.addSubview(registerBtn)
         view.addSubview(profileImageView)
+        view.addSubview(segControl)
         
         setupInputContainer()
         setupRegisterButton()
         setupProfileImageView()
+        setupSegControl()
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
     
+    @objc func handleRegister() {
+        guard let password = passTextField.text, let email = emailTextField.text, let name = nameTextField.text else {
+            return
+        }
+        viewModel.setFormValues(email: email, password: password, name: name)
+        viewModel.handleRegister()
+    }
+    
+    @objc func handleSegControl() {
+        let title = segControl.titleForSegment(at: segControl.selectedSegmentIndex)
+        registerBtn.setTitle(title, for: .normal)
+        
+        nameTextFieldHeightConstraint?.isActive = false
+        emailHeightConstraint?.isActive = false
+        passHeightConstraint?.isActive = false
+        
+        if segControl.selectedSegmentIndex == 0 {
+            inputContainerHeightConstraint?.constant = 100
+            nameTextFieldHeightConstraint = nameTextField.heightAnchor.constraint(equalTo: inputsContainer.heightAnchor, multiplier: 0)
+            emailHeightConstraint = emailTextField.heightAnchor.constraint(equalTo: inputsContainer.heightAnchor, multiplier: 1/2)
+            passHeightConstraint = passTextField.heightAnchor.constraint(equalTo: inputsContainer.heightAnchor, multiplier: 1/2)
+        }
+        
+        if segControl.selectedSegmentIndex == 1 {
+            inputContainerHeightConstraint?.constant = 150
+            nameTextFieldHeightConstraint = nameTextField.heightAnchor.constraint(equalTo: inputsContainer.heightAnchor, multiplier: 1/3)
+            emailHeightConstraint = emailTextField.heightAnchor.constraint(equalTo: inputsContainer.heightAnchor, multiplier: 1/3)
+            passHeightConstraint = passTextField.heightAnchor.constraint(equalTo: inputsContainer.heightAnchor, multiplier: 1/3)
+        }
+
+        emailHeightConstraint?.isActive = true
+        passHeightConstraint?.isActive = true
+        nameTextFieldHeightConstraint?.isActive = true
+    }
+    
+    func setupSegControl() {
+        segControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        segControl.bottomAnchor.constraint(equalTo: inputsContainer.topAnchor, constant: -12).isActive = true
+        segControl.widthAnchor.constraint(equalTo: inputsContainer.widthAnchor, multiplier: 0.5).isActive = true
+        segControl.heightAnchor.constraint(equalToConstant: 50)
+    }
+    
     func setupProfileImageView() {
         profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 150).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
-        profileImageView.bottomAnchor.constraint(equalTo: inputsContainer.topAnchor, constant: -12).isActive = true
+        profileImageView.bottomAnchor.constraint(equalTo: segControl.topAnchor, constant: -12).isActive = true
     }
     
     func setupSeparatorConstraints(v: UIView, for textField: UITextField) {
@@ -129,14 +179,16 @@ class LoginViewController: UIViewController {
         inputsContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         inputsContainer.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         inputsContainer.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -24).isActive = true
-        inputsContainer.heightAnchor.constraint(equalToConstant: 150.0).isActive = true
+        inputContainerHeightConstraint = inputsContainer.heightAnchor.constraint(equalToConstant: 150.0)
+        inputContainerHeightConstraint?.isActive = true
         
         inputsContainer.addSubview(nameTextField)
         inputsContainer.addSubview(nameSeparatorView)
         
         nameTextField.leftAnchor.constraint(equalTo: inputsContainer.leftAnchor, constant: 12).isActive = true
         nameTextField.topAnchor.constraint(equalTo: inputsContainer.topAnchor, constant: 0).isActive = true
-        nameTextField.heightAnchor.constraint(equalTo: inputsContainer.heightAnchor, multiplier: 1/3).isActive = true
+        nameTextFieldHeightConstraint = nameTextField.heightAnchor.constraint(equalTo: inputsContainer.heightAnchor, multiplier: 1/3)
+        nameTextFieldHeightConstraint?.isActive = true
         nameTextField.widthAnchor.constraint(equalTo: inputsContainer.widthAnchor).isActive = true
         
         setupSeparatorConstraints(v: nameSeparatorView, for: nameTextField)
@@ -146,7 +198,9 @@ class LoginViewController: UIViewController {
         
         emailTextField.leftAnchor.constraint(equalTo: inputsContainer.leftAnchor, constant: 12).isActive = true
         emailTextField.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 0).isActive = true
-        emailTextField.heightAnchor.constraint(equalTo: inputsContainer.heightAnchor, multiplier: 1/3).isActive = true
+        
+        emailHeightConstraint =  emailTextField.heightAnchor.constraint(equalTo: inputsContainer.heightAnchor, multiplier: 1/3)
+        emailHeightConstraint?.isActive = true
         emailTextField.widthAnchor.constraint(equalTo: inputsContainer.widthAnchor).isActive = true
         
         setupSeparatorConstraints(v: emailSeparatorView, for: emailTextField)
@@ -155,7 +209,8 @@ class LoginViewController: UIViewController {
         
         passTextField.leftAnchor.constraint(equalTo: inputsContainer.leftAnchor, constant: 12).isActive = true
         passTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 0).isActive = true
-        passTextField.heightAnchor.constraint(equalTo: inputsContainer.heightAnchor, multiplier: 1/3).isActive = true
+        passHeightConstraint = passTextField.heightAnchor.constraint(equalTo: inputsContainer.heightAnchor, multiplier: 1/3)
+        passHeightConstraint?.isActive = true
         passTextField.widthAnchor.constraint(equalTo: inputsContainer.widthAnchor).isActive = true
     }
 
