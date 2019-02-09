@@ -117,7 +117,11 @@ class LoginViewController: UIViewController {
             return
         }
         viewModel.setFormValues(email: email, password: password, name: name)
-        viewModel.handleRegister()
+        if segControl.selectedSegmentIndex == 0 {
+            viewModel.handleLogin()
+        } else {
+            viewModel.handleRegister()
+        }
     }
     
     @objc func handleSegControl() {
@@ -234,9 +238,17 @@ extension LoginViewController: LoginViewModelOutput {
     
     func updatedChildValues(status: Bool) {
         if status {
-            showAlert(title: "Success", message: "User data saved")
+            self.dismiss(animated: true, completion: nil)
         } else {
             showAlert(title: "Failed", message: "User data not saved")
+        }
+    }
+    
+    func loginFinishedWith(status: Bool) {
+        if status {
+            self.dismiss(animated: true, completion: nil)
+        } else {
+            showAlert(title: "Failed", message: "User login failed")
         }
     }
 }

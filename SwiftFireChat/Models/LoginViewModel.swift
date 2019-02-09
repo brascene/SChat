@@ -12,6 +12,7 @@ import Firebase
 protocol LoginViewModelOutput {
     func userCreated(status: Bool)
     func updatedChildValues(status: Bool)
+    func loginFinishedWith(status: Bool)
 }
 
 class LoginViewModel {
@@ -25,6 +26,16 @@ class LoginViewModel {
         self.email = email
         self.password = password
         self.name = name
+    }
+    
+    func handleLogin() {
+        Auth.auth().signIn(withEmail: email, password: password) { (authRes: AuthDataResult?, error: Error?) in
+            guard error == nil else {
+                self.delegate?.loginFinishedWith(status: false)
+                return
+            }
+            self.delegate?.loginFinishedWith(status: true)
+        }
     }
     
     func handleRegister() {
