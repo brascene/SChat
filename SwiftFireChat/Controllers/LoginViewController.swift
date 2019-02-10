@@ -86,6 +86,13 @@ class LoginViewController: UIViewController {
         return sc
     }()
     
+    let loader: UIActivityIndicatorView = {
+        let aiv = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.white)
+        aiv.translatesAutoresizingMaskIntoConstraints = false
+        aiv.hidesWhenStopped = true
+        return aiv
+    }()
+    
     var inputContainerHeightConstraint: NSLayoutConstraint?
     var nameTextFieldHeightConstraint: NSLayoutConstraint?
     var emailHeightConstraint: NSLayoutConstraint?
@@ -101,15 +108,24 @@ class LoginViewController: UIViewController {
         view.addSubview(registerBtn)
         view.addSubview(profileImageView)
         view.addSubview(segControl)
+        view.addSubview(loader)
         
         setupInputContainer()
         setupRegisterButton()
         setupProfileImageView()
         setupSegControl()
+        setupLoader()
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
+    }
+    
+    @objc func handleImageTap() {
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.allowsEditing = true
+        self.present(picker, animated: true, completion: nil)
     }
     
     @objc func handleRegister() {
@@ -120,6 +136,7 @@ class LoginViewController: UIViewController {
         if segControl.selectedSegmentIndex == 0 {
             viewModel.handleLogin()
         } else {
+            self.loader.startAnimating()
             viewModel.handleRegister()
         }
     }
@@ -151,6 +168,13 @@ class LoginViewController: UIViewController {
         nameTextFieldHeightConstraint?.isActive = true
     }
     
+    func setupLoader() {
+        loader.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        loader.topAnchor.constraint(equalTo: registerBtn.bottomAnchor, constant: 12).isActive = true
+        loader.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        loader.widthAnchor.constraint(equalToConstant: 30).isActive = true
+    }
+    
     func setupSegControl() {
         segControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         segControl.bottomAnchor.constraint(equalTo: inputsContainer.topAnchor, constant: -12).isActive = true
@@ -163,6 +187,8 @@ class LoginViewController: UIViewController {
         profileImageView.widthAnchor.constraint(equalToConstant: 150).isActive = true
         profileImageView.heightAnchor.constraint(equalToConstant: 150).isActive = true
         profileImageView.bottomAnchor.constraint(equalTo: segControl.topAnchor, constant: -12).isActive = true
+        profileImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleImageTap)))
+        profileImageView.isUserInteractionEnabled = true
     }
     
     func setupSeparatorConstraints(v: UIView, for textField: UITextField) {
@@ -229,6 +255,7 @@ extension LoginViewController: LoginViewModelOutput {
     }
     
     func userCreated(status: Bool) {
+        self.loader.stopAnimating()
         if status {
             showAlert(title: "Success", message: "User created")
         } else {
@@ -237,6 +264,7 @@ extension LoginViewController: LoginViewModelOutput {
     }
     
     func updatedChildValues(status: Bool) {
+        self.loader.stopAnimating()
         if status {
             self.dismiss(animated: true, completion: nil)
         } else {
@@ -250,5 +278,31 @@ extension LoginViewController: LoginViewModelOutput {
         } else {
             showAlert(title: "Failed", message: "User login failed")
         }
+    }
+    
+    func avatarError(message: String) {
+        self.loader.stopAnimating()
+        showAlert(title: "Fix this", message: message)
+    }
+}
+
+extension LoginViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        var selectedImage: UIImage?
+        guard let originalImage = info[.originalImage] as? UIImage else { return }
+        selectedImage = originalImage
+        guard let editedImage = info[.editedImage] as? UIImage else { return }
+        selectedImage = editedImage
+        
+        if let selectedImage = selectedImage {
+            self.profileImageView.image = selectedImage
+            self.viewModel.userImage = selectedImage
+        }
+        
+        dismiss(animated: true, completion: nil)
     }
 }
