@@ -53,9 +53,49 @@ extension MessagesViewController: MessagesViewModelOutput {
         }
     }
     
-    func fetchedUserData(name: String?) {
-        guard let name = name else { return }
-        self.navigationItem.title = name
+    func fetchedUserData(user: UserModel?) {
+        guard let user = user else { return }
+        setupNavbarWithUser(user: user)
+    }
+    
+    func setupNavbarWithUser(user: UserModel) {
+        self.navigationItem.title = user.name
+        let titleView = UIView()
+        titleView.frame = CGRect(x: 0, y: 0, width: 100, height: 40)
+        
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        titleView.addSubview(containerView)
+        
+        let avatar = UIImageView()
+        avatar.translatesAutoresizingMaskIntoConstraints = false
+        avatar.loadImageCacheWithUrl(imageUrl: user.avatar_url)
+        avatar.contentMode = .scaleAspectFill
+        avatar.layer.cornerRadius = 20
+        avatar.clipsToBounds = true
+        
+        containerView.addSubview(avatar)
+        
+        avatar.leftAnchor.constraint(equalTo: containerView.leftAnchor).isActive = true
+        avatar.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        avatar.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        avatar.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = user.name
+        
+        containerView.addSubview(label)
+        
+        label.leftAnchor.constraint(equalTo: avatar.rightAnchor, constant: 8).isActive = true
+        label.centerYAnchor.constraint(equalTo: avatar.centerYAnchor).isActive = true
+        label.rightAnchor.constraint(equalTo: containerView.rightAnchor, constant: 0).isActive = true
+        label.heightAnchor.constraint(equalTo: avatar.heightAnchor).isActive = true
+        
+        containerView.centerXAnchor.constraint(equalTo: titleView.centerXAnchor).isActive = true
+        containerView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
+        
+        self.navigationItem.titleView = titleView
     }
 }
 

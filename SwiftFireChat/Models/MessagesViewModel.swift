@@ -11,7 +11,7 @@ import Firebase
 
 protocol MessagesViewModelOutput {
     func checkedIfUserLogged(logged: Bool)
-    func fetchedUserData(name: String?)
+    func fetchedUserData(user: UserModel?)
 }
 
 class MessagesViewModel {
@@ -26,8 +26,10 @@ class MessagesViewModel {
         if let uid = Auth.auth().currentUser?.uid {
             Database.database().reference().child("users").child(uid).observe(.value, with: { (snapshot: DataSnapshot) in
                 if let dict = snapshot.value as? [String: AnyObject] {
-                    let name = dict["name"] as? String
-                    self.delegate?.fetchedUserData(name: name)
+                    if let name = dict["name"] as? String, let email = dict["email"] as? String, let avatar = dict["user_image_url"] as? String {
+                        let user = UserModel(name: name, email: email, avatar: avatar)
+                        self.delegate?.fetchedUserData(user: user)
+                    }
                 }
             }, withCancel: nil)
         }

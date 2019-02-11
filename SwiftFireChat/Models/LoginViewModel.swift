@@ -53,9 +53,9 @@ class LoginViewModel {
                 
                 guard let uid = result?.user.uid else { return }
                 let imageName = NSUUID().uuidString
-                let imageStorageRef = self.storageRef.child("user_images").child("\(imageName).png")
+                let imageStorageRef = self.storageRef.child("user_images").child("\(imageName).jpg")
                 
-                if let imageData = userImage.pngData() {
+                if let imageData = userImage.jpegData(compressionQuality: 0.1) {
                     imageStorageRef.putData(imageData, metadata: nil, completion: { (metadata: StorageMetadata?, erorr: Error?) in
                         guard error == nil else { return }
                         
