@@ -19,6 +19,7 @@
 		C4D75F20220F97EA00D3620A /* MessagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D75F1F220F97EA00D3620A /* MessagesViewModel.swift */; };
 		C4D75F22220F9C1800D3620A /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D75F21220F9C1800D3620A /* NewMessageController.swift */; };
 		C4D75F24220F9E9600D3620A /* NewMessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D75F23220F9E9600D3620A /* NewMessageViewModel.swift */; };
+		C4DAC86E2212345C001BCDAA /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DAC86D2212345C001BCDAA /* UIImageView+Extension.swift */; };
 		F378679B169395F26C3380F5 /* Pods_SwiftFireChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA33B5A79AD1D51B2309D35D /* Pods_SwiftFireChat.framework */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +40,7 @@
 		C4D75F1F220F97EA00D3620A /* MessagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewModel.swift; sourceTree = "<group>"; };
 		C4D75F21220F9C1800D3620A /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
 		C4D75F23220F9E9600D3620A /* NewMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageViewModel.swift; sourceTree = "<group>"; };
+		C4DAC86D2212345C001BCDAA /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		DA33B5A79AD1D51B2309D35D /* Pods_SwiftFireChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftFireChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -120,6 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				C4D75F1D220E41DB00D3620A /* UIColor+Extension.swift */,
+				C4DAC86D2212345C001BCDAA /* UIImageView+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -263,6 +266,7 @@
 				C4D75F20220F97EA00D3620A /* MessagesViewModel.swift in Sources */,
 				C4D75F1B220E40E100D3620A /* LoginViewModel.swift in Sources */,
 				C4D75F16220E1D7B00D3620A /* LoginViewController.swift in Sources */,
+				C4DAC86E2212345C001BCDAA /* UIImageView+Extension.swift in Sources */,
 				C4D75F05220E1ABF00D3620A /* MessagesViewController.swift in Sources */,
 				C4D75F22220F9C1800D3620A /* NewMessageController.swift in Sources */,
 				C4D75F03220E1ABF00D3620A /* AppDelegate.swift in Sources */,
