@@ -9,13 +9,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "SwiftFireChat/Models/MessagesViewModel.swift"
-            timestampString = "571620771.975016"
+            filePath = "SwiftFireChat/Controllers/ChatLogController.swift"
+            timestampString = "571706282.227864"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "28"
-            endingLineNumber = "28"
-            landmarkName = "getNavigationTitle()"
+            startingLineNumber = "127"
+            endingLineNumber = "127"
+            landmarkName = "moveTextInputFieldUp(by:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

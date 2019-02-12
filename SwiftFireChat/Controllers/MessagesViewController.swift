@@ -60,9 +60,9 @@ extension MessagesViewController: MessagesViewModelOutput {
     
     func setupNavbarWithUser(user: UserModel) {
         self.navigationItem.title = user.name
-        let titleView = UIView()
-        titleView.frame = CGRect(x: 0, y: 0, width: 100, height: 40)
-        
+        let titleView = CustomTitleView()
+        titleView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showChatLogController)))
+
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
         titleView.addSubview(containerView)
@@ -97,5 +97,25 @@ extension MessagesViewController: MessagesViewModelOutput {
         
         self.navigationItem.titleView = titleView
     }
+    
+    @objc func showChatLogController() {
+        let chatVC = ChatLogController(collectionViewLayout: UICollectionViewLayout())
+        self.navigationController?.pushViewController(chatVC, animated: true)
+    }
 }
 
+class CustomTitleView: UIView {
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.frame = CGRect(x: 0, y: 0, width: 100.0, height: 40.0)
+        self.isUserInteractionEnabled = true
+    }
+    
+    override var intrinsicContentSize: CGSize {
+        return CGSize(width: 100.0, height: 40.0)
+    }
+}
