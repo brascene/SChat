@@ -12,6 +12,11 @@ import Firebase
 class ChatLogController: UICollectionViewController {
     var currentKeyboardHeight: CGFloat = 0
     var containerViewBottomAnchor: NSLayoutConstraint?
+    var user: UserModel? {
+        didSet {
+            navigationItem.title = user!.name
+        }
+    }
     
     lazy var inputTextField: UITextField = {
         let tf = UITextField()
@@ -87,8 +92,11 @@ class ChatLogController: UICollectionViewController {
     @objc func handleSend() {
         let ref = Database.database().reference().child("messages")
         let childRef = ref.childByAutoId()
-        let values = ["text": inputTextField.text!, "name": "some name"]
-        childRef.updateChildValues(values)
+        let timestamp = Int(NSDate().timeIntervalSince1970)
+        if let toId = user?.id, let fromID = Auth.auth().currentUser?.uid {
+            let values = ["text": inputTextField.text!, "toId": toId, "fromId": fromID, "timestamp": timestamp] as [String : Any]
+            childRef.updateChildValues(values)
+        }
     }
 }
 

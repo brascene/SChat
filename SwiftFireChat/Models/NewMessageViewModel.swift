@@ -13,6 +13,7 @@ class UserModel {
     var name: String = ""
     var email: String = ""
     var avatar_url: String = ""
+    var id: String = ""
     
     init(name: String, email: String, avatar: String) {
         self.name = name
@@ -33,6 +34,7 @@ class NewMessageViewModel {
         Database.database().reference().child("users").observe(.childAdded, with: { (snapshot: DataSnapshot) in
             if let dict = snapshot.value as? [String: AnyObject] {
                 let user = UserModel(name: dict["name"] as! String, email: dict["email"] as! String, avatar: dict["user_image_url"] as! String)
+                user.id = snapshot.key
                 self.allUsers.append(user)
                 self.delegate?.usersRetrieved()
             }

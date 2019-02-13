@@ -12,6 +12,7 @@ class NewMessageController: UITableViewController {
     
     let cellID = "cellID"
     var viewModel: NewMessageViewModel = NewMessageViewModel()
+    var messagesVC: MessagesViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +47,14 @@ class NewMessageController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 72.0
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let currentUser = viewModel.allUsers[indexPath.row]
+        self.dismiss(animated: true) {
+            self.messagesVC?.currentUser = currentUser
+            self.messagesVC?.showChatLogController()
+        }
     }
 }
 

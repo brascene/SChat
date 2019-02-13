@@ -11,6 +11,7 @@ import Firebase
 
 class MessagesViewController: UITableViewController {
     var viewModel: MessagesViewModel = MessagesViewModel()
+    var currentUser: UserModel?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,6 +21,10 @@ class MessagesViewController: UITableViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: newMessageImage, style: .plain, target: self, action: #selector(handleNewMessageBtn))
         
         viewModel.delegate = self
+        viewModel.observeMessages()
+        
+        tableView.delegate = self
+        tableView.dataSource = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -29,6 +34,7 @@ class MessagesViewController: UITableViewController {
     
     @objc func handleNewMessageBtn() {
         let newMessageVC = NewMessageController()
+        newMessageVC.messagesVC = self
         let navigationVC = UINavigationController(rootViewController: newMessageVC)
         self.present(navigationVC, animated: true, completion: nil)
     }
@@ -56,6 +62,12 @@ extension MessagesViewController: MessagesViewModelOutput {
     func fetchedUserData(user: UserModel?) {
         guard let user = user else { return }
         setupNavbarWithUser(user: user)
+    }
+    
+    func messagesRetrieved(messages: [MessageModel]) {
+        if messages.count > 0 {
+            tableView.reloadData()
+        }
     }
     
     func setupNavbarWithUser(user: UserModel) {
@@ -100,6 +112,9 @@ extension MessagesViewController: MessagesViewModelOutput {
     
     @objc func showChatLogController() {
         let chatVC = ChatLogController(collectionViewLayout: UICollectionViewLayout())
+        if let user = currentUser {
+            chatVC.user = user
+        }
         self.navigationController?.pushViewController(chatVC, animated: true)
     }
 }
@@ -117,5 +132,18 @@ class CustomTitleView: UIView {
     
     override var intrinsicContentSize: CGSize {
         return CGSize(width: 100.0, height: 40.0)
+    }
+}
+
+extension MessagesViewController {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return viewModel.messages.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cellID")
+        let currentMessage = viewModel.messages[indexPath.row]
+        cell.textLabel?.text = currentMessage.message
+        return cell
     }
 }
