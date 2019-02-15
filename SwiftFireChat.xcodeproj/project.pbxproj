@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C4CECC5122175F73006B80EF /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4CECC5022175F73006B80EF /* UILabel+Extension.swift */; };
 		C4D75F03220E1ABF00D3620A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D75F02220E1ABF00D3620A /* AppDelegate.swift */; };
 		C4D75F05220E1ABF00D3620A /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D75F04220E1ABF00D3620A /* MessagesViewController.swift */; };
 		C4D75F08220E1ABF00D3620A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C4D75F06220E1ABF00D3620A /* Main.storyboard */; };
@@ -27,6 +28,7 @@
 /* Begin PBXFileReference section */
 		16535EF5E41FEAD7E0562673 /* Pods-SwiftFireChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftFireChat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftFireChat/Pods-SwiftFireChat.debug.xcconfig"; sourceTree = "<group>"; };
 		3BC768D752410D751D644B55 /* Pods-SwiftFireChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftFireChat.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftFireChat/Pods-SwiftFireChat.release.xcconfig"; sourceTree = "<group>"; };
+		C4CECC5022175F73006B80EF /* UILabel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
 		C4D75EFF220E1ABF00D3620A /* SwiftFireChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftFireChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4D75F02220E1ABF00D3620A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C4D75F04220E1ABF00D3620A /* MessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 			children = (
 				C4D75F1D220E41DB00D3620A /* UIColor+Extension.swift */,
 				C4DAC86D2212345C001BCDAA /* UIImageView+Extension.swift */,
+				C4CECC5022175F73006B80EF /* UILabel+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -266,6 +269,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4CECC5122175F73006B80EF /* UILabel+Extension.swift in Sources */,
 				C4DAC87022137609001BCDAA /* ChatLogController.swift in Sources */,
 				C4D75F20220F97EA00D3620A /* MessagesViewModel.swift in Sources */,
 				C4D75F1B220E40E100D3620A /* LoginViewModel.swift in Sources */,

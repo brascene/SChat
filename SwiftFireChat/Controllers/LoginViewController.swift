@@ -115,6 +115,9 @@ class LoginViewController: UIViewController {
         setupProfileImageView()
         setupSegControl()
         setupLoader()
+        
+        emailTextField.delegate = self
+        passTextField.delegate = self
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -286,7 +289,7 @@ extension LoginViewController: LoginViewModelOutput {
     }
 }
 
-extension LoginViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension LoginViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
@@ -304,5 +307,10 @@ extension LoginViewController: UIImagePickerControllerDelegate, UINavigationCont
         }
         
         dismiss(animated: true, completion: nil)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
     }
 }

@@ -23,6 +23,7 @@ class MessagesViewController: UITableViewController {
         viewModel.delegate = self
         viewModel.observeMessages()
         
+        tableView.register(MessagePreviewCell.self, forCellReuseIdentifier: "messagePreviewCellID")
         tableView.delegate = self
         tableView.dataSource = self
     }
@@ -64,8 +65,9 @@ extension MessagesViewController: MessagesViewModelOutput {
         setupNavbarWithUser(user: user)
     }
     
-    func messagesRetrieved(messages: [MessageModel]) {
-        if messages.count > 0 {
+    func messagesRetrieved() {
+        print("Message retrieved")
+        if viewModel.messages.count > 0 {
             tableView.reloadData()
         }
     }
@@ -141,9 +143,83 @@ extension MessagesViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cellID")
+        let cell = tableView.dequeueReusableCell(withIdentifier: "messagePreviewCellID", for: indexPath) as! MessagePreviewCell
         let currentMessage = viewModel.messages[indexPath.row]
-        cell.textLabel?.text = currentMessage.message
+        cell.setupCell(with: currentMessage)
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 64.0
+    }
+}
+
+class MessagePreviewCell: UITableViewCell {
+    let userImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.layer.cornerRadius = 24.0
+        iv.layer.masksToBounds = true
+        iv.contentMode = .scaleAspectFill
+        return iv
+    }()
+    
+    let timeLabel: UILabel = {
+        let l = UILabel()
+        l.translatesAutoresizingMaskIntoConstraints = false
+        l.text = "HH:MM:SS"
+        l.textColor = UIColor.lightGray
+        l.font = UIFont.systemFont(ofSize: 12)
+        return l
+    }()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+        
+        addSubview(userImageView)
+        addSubview(timeLabel)
+        setupImageView()
+        setupTimeLabel()
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        textLabel?.frame = CGRect(x: 64, y: textLabel!.frame.origin.y, width: textLabel!.frame.width, height: textLabel!.frame.height)
+        detailTextLabel?.frame = CGRect(x: 64, y: detailTextLabel!.frame.origin.y, width: detailTextLabel!.frame.width, height: detailTextLabel!.frame.height)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setupImageView() {
+        userImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
+        userImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        userImageView.widthAnchor.constraint(equalToConstant: 48).isActive = true
+        userImageView.heightAnchor.constraint(equalToConstant: 48).isActive = true
+    }
+    
+    func setupTimeLabel() {
+        timeLabel.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
+        timeLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 12).isActive = true
+        timeLabel.centerYAnchor.constraint(equalTo: (self.textLabel?.centerYAnchor)!).isActive = true
+        timeLabel.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        timeLabel.heightAnchor.constraint(equalTo: (textLabel?.heightAnchor)!).isActive = true
+    }
+    
+    func setupCell(with message: MessageModel) {
+        if let toUserAvatarURL = message.toUserAvatarURL {
+            self.userImageView.loadImageCacheWithUrl(imageUrl: toUserAvatarURL)
+        }
+        
+        self.textLabel?.setCechedNameFor(id: message.toID)
+        self.detailTextLabel?.text = message.message
+        
+        let seconds = Double(message.timestamp)
+        let timestampDate = Date(timeIntervalSince1970: seconds)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mm:ss a"
+        let formatedString = dateFormatter.string(from: timestampDate)
+        self.timeLabel.text = formatedString
     }
 }

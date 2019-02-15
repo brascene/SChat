@@ -26,12 +26,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "SwiftFireChat/Controllers/MessagesViewController.swift"
-            timestampString = "571790202.082098"
+            timestampString = "571962866.418606"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "115"
-            endingLineNumber = "115"
-            landmarkName = "showChatLogController()"
+            startingLineNumber = "212"
+            endingLineNumber = "212"
+            landmarkName = "setupCell(with:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
